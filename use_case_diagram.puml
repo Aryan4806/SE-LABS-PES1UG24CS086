@@ -1,0 +1,23 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "DevOps Engineer" as devops
+actor "System Architect" as architect
+
+rectangle "Internal Microservice Catalog & Health Portal" {
+  usecase "Monitor Microservice Health" as UC_Monitor
+  usecase "View Dependency Graph" as UC_Graph
+  usecase "Register Microservice" as UC_Register
+  usecase "Authenticate User" as UC_Auth
+  usecase "Dispatch Incident Notification" as UC_Alert
+
+  devops --> UC_Monitor
+  devops --> UC_Register
+  architect --> UC_Graph
+  architect --> UC_Register
+
+  UC_Register .> UC_Auth : <<include>>
+  UC_Alert .> UC_Monitor : <<extend>>
+}
+@enduml

@@ -1,0 +1,34 @@
+name: Lab 5 Static Analysis
+on:
+  push:
+    branches:
+      - lab5-static-code-analysis
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install analyzers
+        run: python -m pip install pylint bandit flake8
+      - name: Run before-and-after analysis
+        working-directory: Lab5_Static_Code_Analysis
+        run: |
+          mkdir -p reports/before reports/after
+          python3 before/blood_donation.py > reports/before/program_output.txt 2>&1
+          python3 blood_donation.py > reports/after/program_output.txt 2>&1
+          python3 -m pylint before/blood_donation.py > reports/before/pylint.txt 2>&1 || true
+          python3 -m bandit -r before/blood_donation.py > reports/before/bandit.txt 2>&1 || true
+          python3 -m flake8 before/blood_donation.py > reports/before/flake8.txt 2>&1 || true
+          python3 -m pylint blood_donation.py > reports/after/pylint.txt 2>&1 || true
+          python3 -m bandit -r blood_donation.py > reports/after/bandit.txt 2>&1 || true
+          python3 -m flake8 blood_donation.py > reports/after/flake8.txt 2>&1 || true
+      - name: Upload six reports and program outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: lab5-static-analysis-reports
+          path: Lab5_Static_Code_Analysis/reports/

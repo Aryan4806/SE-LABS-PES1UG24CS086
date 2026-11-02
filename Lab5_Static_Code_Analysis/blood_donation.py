@@ -6,8 +6,14 @@ from datetime import date, timedelta
 
 DONORS = []
 STOCK = {
-    "A+": 0, "A-": 0, "B+": 0, "B-": 0,
-    "O+": 0, "O-": 0, "AB+": 0, "AB-": 0,
+    "A+": 0,
+    "A-": 0,
+    "B+": 0,
+    "B-": 0,
+    "O+": 0,
+    "O-": 0,
+    "AB+": 0,
+    "AB-": 0,
 }
 COMPATIBLE = {
     "A+": ["A+", "A-", "O+", "O-"],
@@ -18,7 +24,9 @@ COMPATIBLE = {
 }
 
 
-def register_donor(donor_name, blood_group, age, last_donation=None, notes=None):
+def register_donor(
+    donor_name, blood_group, age, last_donation=None, notes=None
+):
     """Register an eligible donor and return whether registration succeeded."""
     if notes is None:
         notes = []
@@ -60,7 +68,7 @@ def units_for(patient_group):
 
 def is_universal(blood_group):
     """Return whether the group is O-negative or AB-positive."""
-    return blood_group == "O-" or blood_group == "AB+"
+    return blood_group in ("O-", "AB+")
 
 
 def low_stock(threshold=2):

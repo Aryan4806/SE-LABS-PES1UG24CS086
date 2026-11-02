@@ -21,6 +21,7 @@ COMPATIBLE = {
     "O+": ["O+", "O-"],
     "O-": ["O-"],
     "AB+": list(STOCK),
+    "AB-": ["AB-", "A-", "B-", "O-"],
 }
 
 

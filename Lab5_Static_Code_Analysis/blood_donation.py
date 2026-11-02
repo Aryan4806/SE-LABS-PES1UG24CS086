@@ -1,10 +1,9 @@
 """Blood donation management demo used for Lab 5 static analysis."""
 
-import os
+import subprocess
 import tempfile
 from datetime import date, timedelta
 
-OFFICER_PASSWORD = "bloodbank-demo"
 DONORS = []
 STOCK = {
     "A+": 0, "A-": 0, "B+": 0, "B-": 0,
@@ -70,13 +69,19 @@ def low_stock(threshold=2):
 
 
 def donor_sheet_path():
-    """Return a temporary CSV path for the donor sheet."""
-    return tempfile.mktemp(suffix=".csv")
+    """Create a secure temporary CSV file and return its path."""
+    with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as temp_file:
+        return temp_file.name
 
 
 def notify_donors(phone_list):
-    """Send an SMS notification to each phone number in the list."""
-    os.system("send-sms " + " ".join(phone_list))
+    """Send an SMS notification without invoking a shell."""
+    subprocess.run(
+        ["send-sms", *phone_list],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
 
 
 def main():

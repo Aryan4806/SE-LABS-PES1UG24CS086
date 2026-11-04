@@ -89,7 +89,6 @@ def notify_donors(phone_list):
     executable = shutil.which("send-sms")
     if executable is None:
         raise FileNotFoundError("send-sms executable was not found")
-    # The executable is resolved to an absolute path and no shell is invoked.
     subprocess.run(  # nosec B603
         [executable, *phone_list],
         check=True,

@@ -1,6 +1,7 @@
 """Blood donation management demo used for Lab 5 static analysis."""
 
-import subprocess  # nosec B404 - arguments are passed without a shell.
+import shutil
+import subprocess  # nosec B404
 import tempfile
 from datetime import date, timedelta
 
@@ -85,8 +86,12 @@ def donor_sheet_path():
 
 def notify_donors(phone_list):
     """Send an SMS notification without invoking a shell."""
-    subprocess.run(  # nosec B603 - argument list and shell=False are used.
-        ["send-sms", *phone_list],
+    executable = shutil.which("send-sms")
+    if executable is None:
+        raise FileNotFoundError("send-sms executable was not found")
+    # The executable is resolved to an absolute path and no shell is invoked.
+    subprocess.run(  # nosec B603
+        [executable, *phone_list],
         check=True,
         capture_output=True,
         text=True,
